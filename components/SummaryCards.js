@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowDownIcon, ArrowUpIcon, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 

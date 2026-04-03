@@ -1,97 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --bg-primary: #050816;
-  --bg-secondary: #0a0f2e;
-  --accent: #6c63ff;
-  --accent-glow: #a78bfa;
-  --accent-secondary: #06b6d4;
-  --text-primary: #ffffff;
-  --text-muted: #8892b0;
-  --card-bg: rgba(255, 255, 255, 0.04);
-  --card-border: rgba(255, 255, 255, 0.08);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-geist), sans-serif;
+  background-color: #050816;
+  color: #ffffff;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
-/* Scrollbar */
+/* Custom scrollbar for dashboard */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
+  background: #334155;
+  border-radius: 4px;
 }
-
-/* Glass card */
-.glass-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 16px;
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--accent-glow), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glow button */
-.glow-btn {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.glow-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
-}
-.glow-btn:active {
-  transform: translateY(0);
-}
-
-/* Background grid */
-.bg-grid {
-  background-image:
-    linear-gradient(rgba(108, 99, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(108, 99, 255, 0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* Animated gradient orb */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  pointer-events: none;
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
