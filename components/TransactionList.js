@@ -8,6 +8,18 @@ import { cn } from "@/lib/utils";
 export default function TransactionList({ transactions, role, refreshData }) {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+    setCurrentPage(1);
+  };
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase()) || 
@@ -15,6 +27,12 @@ export default function TransactionList({ transactions, role, refreshData }) {
     const matchesType = filterType === "all" || t.type === filterType;
     return matchesSearch && matchesType;
   });
+
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+  const currentTransactions = filteredTransactions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleDelete = async (id) => {
     if(confirm("Are you sure you want to delete this transaction?")) {
@@ -38,13 +56,22 @@ export default function TransactionList({ transactions, role, refreshData }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="relative group">
+          {role === "admin" && (
+            <button 
+              onClick={() => alert("Add Transaction Modal would open here!")}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-lg shadow-indigo-500/20"
+            >
+              + Add Transaction
+            </button>
+          )}
+
+          <div className="relative group hidden sm:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
             <input 
               type="text"
               placeholder="Search..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchChange}
               className="bg-slate-950/50 border border-slate-800 text-sm rounded-lg pl-9 pr-4 py-2 w-full sm:w-64 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-slate-200 placeholder:text-slate-600"
             />
           </div>
@@ -52,7 +79,7 @@ export default function TransactionList({ transactions, role, refreshData }) {
           <div className="relative">
             <select 
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              onChange={handleFilterChange}
               className="appearance-none bg-slate-950/50 border border-slate-800 text-sm rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-slate-200 cursor-pointer"
             >
               <option value="all">All Types</option>
@@ -77,8 +104,8 @@ export default function TransactionList({ transactions, role, refreshData }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((tx) => (
+            {currentTransactions.length > 0 ? (
+              currentTransactions.map((tx) => (
                 <tr key={tx._id} className="hover:bg-white/[0.02] transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -145,6 +172,31 @@ export default function TransactionList({ transactions, role, refreshData }) {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination component */}
+      {totalPages > 1 && (
+        <div className="p-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm text-slate-400 bg-slate-950/20">
+          <div>
+            Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredTransactions.length)} of {filteredTransactions.length} entries
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-slate-200"
+            >
+              Previous
+            </button>
+            <button 
+               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+               disabled={currentPage === totalPages}
+               className="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-slate-200"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,22 @@ import { format, parseISO } from 'date-fns';
 
 const COLORS = ['#6366f1', '#10b981', '#f43f5e', '#f59e0b', '#3b82f6', '#8b5cf6'];
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl relative z-50">
+        <p className="text-slate-300 font-medium mb-2">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} style={{ color: entry.color }} className="text-sm font-semibold">
+            {entry.name}: ${entry.value.toLocaleString()}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Charts({ transactions }) {
   const chartData = useMemo(() => {
     const grouped = {};
@@ -39,22 +55,6 @@ export default function Charts({ transactions }) {
       value: grouped[key]
     })).sort((a, b) => b.value - a.value); // Sort by highest
   }, [transactions]);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl relative z-50">
-          <p className="text-slate-300 font-medium mb-2">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm font-semibold">
-              {entry.name}: ${entry.value.toLocaleString()}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 lg:h-96">
@@ -90,7 +90,7 @@ export default function Charts({ transactions }) {
       </div>
 
       {/* Donut Chart: Categories */}
-      <div className="col-span-1 bg-slate-900/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm flex flex-col relative z-0">
+      <div className="col-span-1 bg-slate-900/40 p-6 rounded-2xl border border-white/5 backdrop-blur-sm flex flex-col relative z-0 min-h-[300px] lg:min-h-0">
         <h3 className="font-semibold text-slate-200 mb-2">Spending Breakdown</h3>
         <p className="text-sm text-slate-400 mb-6">Where is your money going?</p>
 
